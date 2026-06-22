@@ -29,10 +29,10 @@ index f1769ecc8fe0725171b638b7d8b7bbbc9e5250d1..00000000000000000000000000000000
              // call after save
              initWorlds(worldsNode);
          } catch (Exception e) {
-@@ -90,6 +94,15 @@ public class PandaSpigotConfig {
-     public static PandaSpigotConfig get() {
-         return config;
-     }
+@@ -128,4 +132,13 @@ public class PandaSpigotConfig {
+     public int tabSpamIncrement = 10;
+ 
+     public int tabSpamLimit = 500;
 +
 +    public static void registerCommands() {
 +        if (commandsRegistered || net.minecraft.server.MinecraftServer.getServer() == null || net.minecraft.server.MinecraftServer.getServer().server == null) {
@@ -42,8 +42,6 @@ index f1769ecc8fe0725171b638b7d8b7bbbc9e5250d1..00000000000000000000000000000000
 +        net.minecraft.server.MinecraftServer.getServer().server.getCommandMap().register("knockback", "PandaSpigot", new com.hpfxd.pandaspigot.knockback.KnockbackCommand());
 +        commandsRegistered = true;
 +    }
-     
-     //------------------------------------------------------------------------
  }
 diff --git a/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackCommand.java b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackCommand.java
 new file mode 100644
