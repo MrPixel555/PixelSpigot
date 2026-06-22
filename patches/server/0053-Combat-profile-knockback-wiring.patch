@@ -9,6 +9,7 @@ patch is intentionally ordered immediately after ProjectileCollideEvent because
 later PandaSpigot patches change several of these same files.
 
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index 8388bb5bae0c3b072b191b9d3655873f4c2cc995..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
 @@ -1003,17 +1003,14 @@ public abstract class EntityHuman extends EntityLiving {
@@ -37,6 +38,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java
                          if (f > 0.0F) {
                              this.b(entity);
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 1353a791235ae3b820072fa80ef60c3c6723e75d..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -897,23 +897,7 @@ public abstract class EntityLiving extends Entity {
@@ -65,6 +67,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
          }
      }
 diff --git a/src/main/java/net/minecraft/server/EntityArrow.java b/src/main/java/net/minecraft/server/EntityArrow.java
+index d45deff6c1358a441d3d7a659fca9c9c7b595c0f..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/EntityArrow.java
 +++ b/src/main/java/net/minecraft/server/EntityArrow.java
 @@ -95,7 +95,7 @@ public class EntityArrow extends Entity implements IProjectile {
@@ -107,6 +110,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityArrow.java b/src/main/java
              this.checkBlockCollisions();
          }
 diff --git a/src/main/java/net/minecraft/server/EntityProjectile.java b/src/main/java/net/minecraft/server/EntityProjectile.java
+index fba0c18c6e1128d2f627c176531e4afe54bcd7df..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/EntityProjectile.java
 +++ b/src/main/java/net/minecraft/server/EntityProjectile.java
 @@ -46,9 +46,9 @@ public abstract class EntityProjectile extends Entity implements IProjectile {
@@ -180,6 +184,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityProjectile.java b/src/main
          this.setPosition(this.locX, this.locY, this.locZ);
      }
 diff --git a/src/main/java/net/minecraft/server/EntityFishingHook.java b/src/main/java/net/minecraft/server/EntityFishingHook.java
+index 6eca198f9f026c82b8b31d446c3953dabdc956cf..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/EntityFishingHook.java
 +++ b/src/main/java/net/minecraft/server/EntityFishingHook.java
 @@ -204,6 +204,7 @@ public class EntityFishingHook extends Entity {
@@ -207,6 +212,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityFishingHook.java b/src/mai
              if (this.ak) this.die(); // PandaSpigot - Prevent going through portals
          }
 diff --git a/src/main/java/net/minecraft/server/Explosion.java b/src/main/java/net/minecraft/server/Explosion.java
+index b7d410eeb974eee7b26dce8e3b02ff2051e74f93..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/net/minecraft/server/Explosion.java
 +++ b/src/main/java/net/minecraft/server/Explosion.java
 @@ -111,9 +111,7 @@ public class Explosion {

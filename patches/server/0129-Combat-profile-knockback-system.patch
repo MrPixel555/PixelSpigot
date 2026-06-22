@@ -8,6 +8,7 @@ reload command, and the fail-safe profile loader. Runtime NMS wiring is kept
 in an earlier patch so later PandaSpigot patches still apply cleanly.
 
 diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
+index f1769ecc8fe0725171b638b7d8b7bbbc9e5250d1..0000000000000000000000000000000000000000 100644
 --- a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
 +++ b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
 @@ -22,6 +22,7 @@ public class PandaSpigotConfig {
@@ -46,6 +47,7 @@ diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java b
  }
 diff --git a/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackCommand.java b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackCommand.java
 new file mode 100644
+index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000
 --- /dev/null
 +++ b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackCommand.java
 @@ -0,0 +1,38 @@
@@ -89,6 +91,7 @@ new file mode 100644
 +}
 diff --git a/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackConfig.java b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackConfig.java
 new file mode 100644
+index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000
 --- /dev/null
 +++ b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackConfig.java
 @@ -0,0 +1,701 @@
