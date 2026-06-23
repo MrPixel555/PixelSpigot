@@ -1,6 +1,5 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Mohammad Ebrahim Rahimbeiky <rahimbeiky@gmail.com>
-Date: Mon, 22 Jun 2026 22:00:00 +0400
+From: MrPixel555
+Date: Tue, 22 Jun 2026 22:55:03 +0000
 Subject: [PATCH] Add combat knockback profile config and command
 
 Adds a dedicated reloadable combat profile at knockback/profile.yml, its
