@@ -1,6 +1,5 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: MrPixel555 <153556869+MrPixel555@users.noreply.github.com>
-Date: Tue, 23 Jun 2026 01:20:00 +0000
+From: MrPixel555
+Date: Tue, 22 Jun 2026 22:55:03 +0000
 Subject: [PATCH] Add combat knockback profile config and command
 
 Adds a dedicated reloadable combat profile at knockback/profile.yml, its
@@ -92,7 +91,7 @@ new file mode 100644
 index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000
 --- /dev/null
 +++ b/src/main/java/com/hpfxd/pandaspigot/knockback/KnockbackConfig.java
-@@ -0,0 +1,715 @@
+@@ -0,0 +1,738 @@
 +package com.hpfxd.pandaspigot.knockback;
 +
 +import net.minecraft.server.Entity;
@@ -111,6 +110,8 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
 +
 +import java.io.File;
 +import java.io.IOException;
++import java.math.BigDecimal;
++import java.math.RoundingMode;
 +import java.nio.charset.StandardCharsets;
 +import java.nio.file.Files;
 +import java.util.Locale;
@@ -119,97 +120,98 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
 +    private static final String DEFAULT_CONFIG = "# This is the configuration file for a combat profile, in here you can change knockback values,\n"
 +            + "# modify the knockback profile, add modules, or modify projectile values. Be careful while editing\n"
 +            + "# these manually though, because this configuration can easily break!\n"
++            + "# Decimal values are rounded to the nearest 0.001, so values like 4.555 are valid.\n"
 +            + "\n"
 +            + "KNOCKBACK:\n"
 +            + "  TYPE: \"VANILLA\"\n"
-+            + "  HORIZONTAL: 0.4\n"
-+            + "  VERTICAL: 0.4\n"
-+            + "  VERTICAL-LIMIT: 0.4\n"
-+            + "  HORIZONTAL-FRICTION: 2.0\n"
-+            + "  VERTICAL-FRICTION: 2.0\n"
-+            + "  EXTRA-HORIZONTAL: 0.5\n"
-+            + "  EXTRA-VERTICAL: 0.1\n"
++            + "  HORIZONTAL: 0.400\n"
++            + "  VERTICAL: 0.400\n"
++            + "  VERTICAL-LIMIT: 0.400\n"
++            + "  HORIZONTAL-FRICTION: 2.000\n"
++            + "  VERTICAL-FRICTION: 2.000\n"
++            + "  EXTRA-HORIZONTAL: 0.500\n"
++            + "  EXTRA-VERTICAL: 0.100\n"
 +            + "  RESET-SPRINT: true\n"
 +            + "  ONE-POINT-SEVEN-KNOCKBACK: false\n"
 +            + "  SLOWDOWN:\n"
 +            + "    ENABLED: true\n"
-+            + "    VALUE: 0.6\n"
++            + "    VALUE: 0.600\n"
 +            + "  MAX-NO-DAMAGE-TICKS:\n"
 +            + "    ENABLED: false\n"
 +            + "    VALUE: 20\n"
 +            + "IMPACT:\n"
 +            + "  ENDER-PEARL:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
-+            + "    HORIZONTAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
-+            + "    MIN-VERTICAL-LIMIT: -1.0\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
++            + "    HORIZONTAL-FRICTION: 2.000\n"
++            + "    VERTICAL-FRICTION: 2.000\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
++            + "    MIN-VERTICAL-LIMIT: -1.000\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
 +            + "      VALUE: 20\n"
 +            + "  SNOWBALL:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
-+            + "    HORIZONTAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
-+            + "    MIN-VERTICAL-LIMIT: -1.0\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
++            + "    HORIZONTAL-FRICTION: 2.000\n"
++            + "    VERTICAL-FRICTION: 2.000\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
++            + "    MIN-VERTICAL-LIMIT: -1.000\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
 +            + "      VALUE: 20\n"
 +            + "  EGG:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
-+            + "    HORIZONTAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
-+            + "    MIN-VERTICAL-LIMIT: -1.0\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
++            + "    HORIZONTAL-FRICTION: 2.000\n"
++            + "    VERTICAL-FRICTION: 2.000\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
++            + "    MIN-VERTICAL-LIMIT: -1.000\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
 +            + "      VALUE: 20\n"
 +            + "  FISHING-HOOK:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
 +            + "    DIRECTION-BASED: true\n"
 +            + "    FISH-VELOCITY:\n"
 +            + "      ENABLED: false\n"
-+            + "      MULTIPLIER: 0.1\n"
-+            + "      VERTICAL-MULTIPLIER: 0.08\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
++            + "      MULTIPLIER: 0.100\n"
++            + "      VERTICAL-MULTIPLIER: 0.080\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
 +            + "      VALUE: 20\n"
 +            + "    CLASSIC-RODS:\n"
 +            + "      ENABLED: false\n"
-+            + "      HORIZONTAL: 0.8\n"
-+            + "      VERTICAL: 0.95\n"
++            + "      HORIZONTAL: 0.800\n"
++            + "      VERTICAL: 0.950\n"
 +            + "  ARROW:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
-+            + "    HORIZONTAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-FRICTION: 2.0\n"
-+            + "    EXTRA-VERTICAL: 0.1\n"
-+            + "    EXTRA-HORIZONTAL: 0.6\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
-+            + "    MIN-VERTICAL-LIMIT: -1.0\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
++            + "    HORIZONTAL-FRICTION: 2.000\n"
++            + "    VERTICAL-FRICTION: 2.000\n"
++            + "    EXTRA-VERTICAL: 0.100\n"
++            + "    EXTRA-HORIZONTAL: 0.600\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
++            + "    MIN-VERTICAL-LIMIT: -1.000\n"
 +            + "    STRAIGHT-KNOCKBACK: false\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
 +            + "      VALUE: 20\n"
 +            + "  EXPLOSION:\n"
 +            + "    ENABLED: false\n"
-+            + "    HORIZONTAL: 0.4\n"
-+            + "    VERTICAL: 0.4\n"
-+            + "    HORIZONTAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-FRICTION: 2.0\n"
-+            + "    VERTICAL-LIMIT: 0.4\n"
-+            + "    MIN-VERTICAL-LIMIT: -1.0\n"
++            + "    HORIZONTAL: 0.400\n"
++            + "    VERTICAL: 0.400\n"
++            + "    HORIZONTAL-FRICTION: 2.000\n"
++            + "    VERTICAL-FRICTION: 2.000\n"
++            + "    VERTICAL-LIMIT: 0.400\n"
++            + "    MIN-VERTICAL-LIMIT: -1.000\n"
 +            + "    STRAIGHT-KNOCKBACK: false\n"
 +            + "    MAX-NO-DAMAGE-TICKS:\n"
 +            + "      ENABLED: false\n"
@@ -217,69 +219,69 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
 +            + "PROJECTILE:\n"
 +            + "  ENDER-PEARL:\n"
 +            + "    ENABLED: false\n"
-+            + "    LAUNCH-SPEED: 1.5\n"
-+            + "    SPEED-MULTIPLIER: 0.99\n"
-+            + "    GRAVITY: 0.0\n"
-+            + "    VERTICAL-OFFSET: 0.0\n"
++            + "    LAUNCH-SPEED: 1.500\n"
++            + "    SPEED-MULTIPLIER: 0.990\n"
++            + "    GRAVITY: 0.000\n"
++            + "    VERTICAL-OFFSET: 0.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.01\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.010\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    COPY-TARGET-Y-POSITION: true\n"
 +            + "  SNOWBALL:\n"
 +            + "    ENABLED: false\n"
-+            + "    LAUNCH-SPEED: 1.5\n"
-+            + "    SPEED-MULTIPLIER: 0.99\n"
-+            + "    GRAVITY: 0.03\n"
-+            + "    VERTICAL-OFFSET: 0.0\n"
++            + "    LAUNCH-SPEED: 1.500\n"
++            + "    SPEED-MULTIPLIER: 0.990\n"
++            + "    GRAVITY: 0.030\n"
++            + "    VERTICAL-OFFSET: 0.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.25\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.250\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    SELF-COLLISION-TICKS: 5\n"
 +            + "  EGG:\n"
 +            + "    ENABLED: false\n"
-+            + "    LAUNCH-SPEED: 1.5\n"
-+            + "    SPEED-MULTIPLIER: 0.99\n"
-+            + "    GRAVITY: 0.03\n"
-+            + "    VERTICAL-OFFSET: 0.0\n"
++            + "    LAUNCH-SPEED: 1.500\n"
++            + "    SPEED-MULTIPLIER: 0.990\n"
++            + "    GRAVITY: 0.030\n"
++            + "    VERTICAL-OFFSET: 0.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.25\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.250\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    SELF-COLLISION-TICKS: 5\n"
 +            + "  FISHING-HOOK:\n"
 +            + "    ENABLED: false\n"
-+            + "    LAUNCH-SPEED: 1.5\n"
++            + "    LAUNCH-SPEED: 1.500\n"
 +            + "    SPEED-MULTIPLIER: 0.92\n"
-+            + "    GRAVITY: 0.03999999910593033\n"
-+            + "    VERTICAL-OFFSET: 0.0\n"
++            + "    GRAVITY: 0.040\n"
++            + "    VERTICAL-OFFSET: 0.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.25\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.250\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    SELF-COLLISION-TICKS: 5\n"
 +            + "  ARROW:\n"
 +            + "    ENABLED: false\n"
-+            + "    LAUNCH-SPEED: 1.5\n"
-+            + "    SPEED-MULTIPLIER: 0.99\n"
-+            + "    GRAVITY: 0.05\n"
-+            + "    VERTICAL-OFFSET: 0.0\n"
++            + "    LAUNCH-SPEED: 1.500\n"
++            + "    SPEED-MULTIPLIER: 0.990\n"
++            + "    GRAVITY: 0.050\n"
++            + "    VERTICAL-OFFSET: 0.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.5\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.500\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    SELF-COLLISION-TICKS: 5\n"
 +            + "  SPLASH-POTION:\n"
 +            + "    ENABLED: false\n"
 +            + "    LAUNCH-SPEED: 0.5\n"
-+            + "    SPEED-MULTIPLIER: 0.99\n"
-+            + "    GRAVITY: 0.05\n"
-+            + "    VERTICAL-OFFSET: -20.0\n"
++            + "    SPEED-MULTIPLIER: 0.990\n"
++            + "    GRAVITY: 0.050\n"
++            + "    VERTICAL-OFFSET: -20.000\n"
 +            + "    HORIZONTAL-OFFSET-ENABLED: true\n"
-+            + "    HORIZONTAL-OFFSET: 0.16\n"
-+            + "    HITBOX-SIZE: 0.25\n"
-+            + "    TRAJECTORY-RANDOMNESS: 1.0\n"
++            + "    HORIZONTAL-OFFSET: 0.160\n"
++            + "    HITBOX-SIZE: 0.250\n"
++            + "    TRAJECTORY-RANDOMNESS: 1.000\n"
 +            + "    SELF-COLLISION-TICKS: 5\n"
 +            + "    SMOOTH-POTION: false\n";
 +
@@ -339,70 +341,90 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
 +        }
 +    }
 +
-+    private static void loadKnockback(YamlConfiguration yaml, KnockbackSettings settings) {
++    private static void loadKnockback(YamlConfiguration yaml, KnockbackSettings settings) throws InvalidConfigurationException {
 +        String root = "KNOCKBACK.";
-+        settings.horizontal = yaml.getDouble(root + "HORIZONTAL", settings.horizontal);
-+        settings.vertical = yaml.getDouble(root + "VERTICAL", settings.vertical);
-+        settings.verticalLimit = yaml.getDouble(root + "VERTICAL-LIMIT", settings.verticalLimit);
-+        settings.horizontalFriction = yaml.getDouble(root + "HORIZONTAL-FRICTION", settings.horizontalFriction);
-+        settings.verticalFriction = yaml.getDouble(root + "VERTICAL-FRICTION", settings.verticalFriction);
-+        settings.extraHorizontal = yaml.getDouble(root + "EXTRA-HORIZONTAL", settings.extraHorizontal);
-+        settings.extraVertical = yaml.getDouble(root + "EXTRA-VERTICAL", settings.extraVertical);
++        settings.horizontal = readPreciseDouble(yaml, root + "HORIZONTAL", settings.horizontal);
++        settings.vertical = readPreciseDouble(yaml, root + "VERTICAL", settings.vertical);
++        settings.verticalLimit = readPreciseDouble(yaml, root + "VERTICAL-LIMIT", settings.verticalLimit);
++        settings.horizontalFriction = readPreciseDouble(yaml, root + "HORIZONTAL-FRICTION", settings.horizontalFriction);
++        settings.verticalFriction = readPreciseDouble(yaml, root + "VERTICAL-FRICTION", settings.verticalFriction);
++        settings.extraHorizontal = readPreciseDouble(yaml, root + "EXTRA-HORIZONTAL", settings.extraHorizontal);
++        settings.extraVertical = readPreciseDouble(yaml, root + "EXTRA-VERTICAL", settings.extraVertical);
 +        settings.resetSprint = yaml.getBoolean(root + "RESET-SPRINT", settings.resetSprint);
 +        settings.onePointSevenKnockback = yaml.getBoolean(root + "ONE-POINT-SEVEN-KNOCKBACK", settings.onePointSevenKnockback);
 +        settings.slowdown.enabled = yaml.getBoolean(root + "SLOWDOWN.ENABLED", settings.slowdown.enabled);
-+        settings.slowdown.value = yaml.getDouble(root + "SLOWDOWN.VALUE", settings.slowdown.value);
++        settings.slowdown.value = readPreciseDouble(yaml, root + "SLOWDOWN.VALUE", settings.slowdown.value);
 +        settings.maxNoDamageTicks.enabled = yaml.getBoolean(root + "MAX-NO-DAMAGE-TICKS.ENABLED", settings.maxNoDamageTicks.enabled);
 +        settings.maxNoDamageTicks.value = yaml.getInt(root + "MAX-NO-DAMAGE-TICKS.VALUE", settings.maxNoDamageTicks.value);
 +    }
 +
-+    private static void loadImpact(YamlConfiguration yaml, String key, ImpactSettings settings) {
++    private static void loadImpact(YamlConfiguration yaml, String key, ImpactSettings settings) throws InvalidConfigurationException {
 +        String root = "IMPACT." + key + ".";
 +        settings.enabled = yaml.getBoolean(root + "ENABLED", settings.enabled);
-+        settings.horizontal = yaml.getDouble(root + "HORIZONTAL", settings.horizontal);
-+        settings.vertical = yaml.getDouble(root + "VERTICAL", settings.vertical);
-+        settings.horizontalFriction = yaml.getDouble(root + "HORIZONTAL-FRICTION", settings.horizontalFriction);
-+        settings.verticalFriction = yaml.getDouble(root + "VERTICAL-FRICTION", settings.verticalFriction);
-+        settings.verticalLimit = yaml.getDouble(root + "VERTICAL-LIMIT", settings.verticalLimit);
-+        settings.minVerticalLimit = yaml.getDouble(root + "MIN-VERTICAL-LIMIT", settings.minVerticalLimit);
++        settings.horizontal = readPreciseDouble(yaml, root + "HORIZONTAL", settings.horizontal);
++        settings.vertical = readPreciseDouble(yaml, root + "VERTICAL", settings.vertical);
++        settings.horizontalFriction = readPreciseDouble(yaml, root + "HORIZONTAL-FRICTION", settings.horizontalFriction);
++        settings.verticalFriction = readPreciseDouble(yaml, root + "VERTICAL-FRICTION", settings.verticalFriction);
++        settings.verticalLimit = readPreciseDouble(yaml, root + "VERTICAL-LIMIT", settings.verticalLimit);
++        settings.minVerticalLimit = readPreciseDouble(yaml, root + "MIN-VERTICAL-LIMIT", settings.minVerticalLimit);
 +        settings.straightKnockback = yaml.getBoolean(root + "STRAIGHT-KNOCKBACK", settings.straightKnockback);
 +        settings.maxNoDamageTicks.enabled = yaml.getBoolean(root + "MAX-NO-DAMAGE-TICKS.ENABLED", settings.maxNoDamageTicks.enabled);
 +        settings.maxNoDamageTicks.value = yaml.getInt(root + "MAX-NO-DAMAGE-TICKS.VALUE", settings.maxNoDamageTicks.value);
 +    }
 +
-+    private static void loadFishingImpact(YamlConfiguration yaml, FishingHookImpactSettings settings) {
++    private static void loadFishingImpact(YamlConfiguration yaml, FishingHookImpactSettings settings) throws InvalidConfigurationException {
 +        loadImpact(yaml, "FISHING-HOOK", settings);
 +        String root = "IMPACT.FISHING-HOOK.";
 +        settings.directionBased = yaml.getBoolean(root + "DIRECTION-BASED", settings.directionBased);
 +        settings.fishVelocity.enabled = yaml.getBoolean(root + "FISH-VELOCITY.ENABLED", settings.fishVelocity.enabled);
-+        settings.fishVelocity.multiplier = yaml.getDouble(root + "FISH-VELOCITY.MULTIPLIER", settings.fishVelocity.multiplier);
-+        settings.fishVelocity.verticalMultiplier = yaml.getDouble(root + "FISH-VELOCITY.VERTICAL-MULTIPLIER", settings.fishVelocity.verticalMultiplier);
++        settings.fishVelocity.multiplier = readPreciseDouble(yaml, root + "FISH-VELOCITY.MULTIPLIER", settings.fishVelocity.multiplier);
++        settings.fishVelocity.verticalMultiplier = readPreciseDouble(yaml, root + "FISH-VELOCITY.VERTICAL-MULTIPLIER", settings.fishVelocity.verticalMultiplier);
 +        settings.classicRods.enabled = yaml.getBoolean(root + "CLASSIC-RODS.ENABLED", settings.classicRods.enabled);
-+        settings.classicRods.horizontal = yaml.getDouble(root + "CLASSIC-RODS.HORIZONTAL", settings.classicRods.horizontal);
-+        settings.classicRods.vertical = yaml.getDouble(root + "CLASSIC-RODS.VERTICAL", settings.classicRods.vertical);
++        settings.classicRods.horizontal = readPreciseDouble(yaml, root + "CLASSIC-RODS.HORIZONTAL", settings.classicRods.horizontal);
++        settings.classicRods.vertical = readPreciseDouble(yaml, root + "CLASSIC-RODS.VERTICAL", settings.classicRods.vertical);
 +    }
 +
-+    private static void loadArrowImpact(YamlConfiguration yaml, ArrowImpactSettings settings) {
++    private static void loadArrowImpact(YamlConfiguration yaml, ArrowImpactSettings settings) throws InvalidConfigurationException {
 +        loadImpact(yaml, "ARROW", settings);
 +        String root = "IMPACT.ARROW.";
-+        settings.extraHorizontal = yaml.getDouble(root + "EXTRA-HORIZONTAL", settings.extraHorizontal);
-+        settings.extraVertical = yaml.getDouble(root + "EXTRA-VERTICAL", settings.extraVertical);
++        settings.extraHorizontal = readPreciseDouble(yaml, root + "EXTRA-HORIZONTAL", settings.extraHorizontal);
++        settings.extraVertical = readPreciseDouble(yaml, root + "EXTRA-VERTICAL", settings.extraVertical);
 +    }
 +
-+    private static void loadProjectile(YamlConfiguration yaml, String key, ProjectileSettings settings) {
++    private static void loadProjectile(YamlConfiguration yaml, String key, ProjectileSettings settings) throws InvalidConfigurationException {
 +        String root = "PROJECTILE." + key + ".";
 +        settings.enabled = yaml.getBoolean(root + "ENABLED", settings.enabled);
-+        settings.launchSpeed = yaml.getDouble(root + "LAUNCH-SPEED", settings.launchSpeed);
-+        settings.speedMultiplier = yaml.getDouble(root + "SPEED-MULTIPLIER", settings.speedMultiplier);
-+        settings.gravity = yaml.getDouble(root + "GRAVITY", settings.gravity);
-+        settings.verticalOffset = yaml.getDouble(root + "VERTICAL-OFFSET", settings.verticalOffset);
++        settings.launchSpeed = readPreciseDouble(yaml, root + "LAUNCH-SPEED", settings.launchSpeed);
++        settings.speedMultiplier = readPreciseDouble(yaml, root + "SPEED-MULTIPLIER", settings.speedMultiplier);
++        settings.gravity = readPreciseDouble(yaml, root + "GRAVITY", settings.gravity);
++        settings.verticalOffset = readPreciseDouble(yaml, root + "VERTICAL-OFFSET", settings.verticalOffset);
 +        settings.horizontalOffsetEnabled = yaml.getBoolean(root + "HORIZONTAL-OFFSET-ENABLED", settings.horizontalOffsetEnabled);
-+        settings.horizontalOffset = yaml.getDouble(root + "HORIZONTAL-OFFSET", settings.horizontalOffset);
-+        settings.hitboxSize = yaml.getDouble(root + "HITBOX-SIZE", settings.hitboxSize);
-+        settings.trajectoryRandomness = yaml.getDouble(root + "TRAJECTORY-RANDOMNESS", settings.trajectoryRandomness);
++        settings.horizontalOffset = readPreciseDouble(yaml, root + "HORIZONTAL-OFFSET", settings.horizontalOffset);
++        settings.hitboxSize = readPreciseDouble(yaml, root + "HITBOX-SIZE", settings.hitboxSize);
++        settings.trajectoryRandomness = readPreciseDouble(yaml, root + "TRAJECTORY-RANDOMNESS", settings.trajectoryRandomness);
 +        settings.selfCollisionTicks = yaml.getInt(root + "SELF-COLLISION-TICKS", settings.selfCollisionTicks);
 +        settings.copyTargetYPosition = yaml.getBoolean(root + "COPY-TARGET-Y-POSITION", settings.copyTargetYPosition);
 +        settings.smoothPotion = yaml.getBoolean(root + "SMOOTH-POTION", settings.smoothPotion);
++    }
++
++    private static double readPreciseDouble(YamlConfiguration yaml, String path, double fallback) throws InvalidConfigurationException {
++        Object raw = yaml.get(path);
++        if (raw == null) {
++            return fallback;
++        }
++
++        BigDecimal decimal;
++        try {
++            if (raw instanceof Number) {
++                decimal = new BigDecimal(raw.toString());
++            } else {
++                decimal = new BigDecimal(String.valueOf(raw).trim());
++            }
++        } catch (NumberFormatException ex) {
++            throw new InvalidConfigurationException(path + " must be a valid decimal number");
++        }
++
++        return decimal.setScale(3, RoundingMode.HALF_UP).doubleValue();
 +    }
 +
 +    private static void validate(Profile loaded) throws InvalidConfigurationException {
